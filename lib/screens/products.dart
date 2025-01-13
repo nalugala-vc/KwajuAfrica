@@ -50,7 +50,10 @@ class _ProductsState extends State<Products> {
   }
 
   Future<void> _loadData() async {
-    await Future.microtask(() => productController.fetchFeaturedProducts());
+    await Future.microtask(() {
+      productController.fetchFeaturedProducts();
+      productController.fetchCategories();
+    });
   }
 
   Future<void> _refresh() async {
@@ -137,24 +140,25 @@ class _ProductsState extends State<Products> {
                         ],
                       ),
                       spaceH15,
-                      // SizedBox(
-                      //   height: 110,
-                      //   child: ListView.separated(
-                      //     separatorBuilder: (context, index) {
-                      //       return spaceW20;
-                      //     },
-                      //     itemCount: categries.length,
-                      //     scrollDirection: Axis.horizontal,
-                      //     shrinkWrap: true,
-                      //     itemBuilder: (BuildContext context, int index) {
-                      //       final category = categries[index];
-                      //       return CategriesWidget(
-                      //         bgImage: category.image,
-                      //         categoryName: category.name,
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
+                      SizedBox(
+                        height: 110,
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return spaceW20;
+                          },
+                          itemCount: productController.categoriesList.length,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            final category =
+                                productController.categoriesList[index];
+                            return CategriesWidget(
+                              bgImage: category.image,
+                              categoryName: category.name,
+                            );
+                          },
+                        ),
+                      ),
                       spaceH10,
                       _homePageNoFilter()
                     ],
@@ -296,19 +300,27 @@ class _ProductsState extends State<Products> {
             return spaceH20;
           },
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: productController.categories.length,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: productController.featuredCategoriesList.length,
           itemBuilder: (context, index) {
-            final categories = productController.categories[index];
+            final featuredCategoriesList =
+                productController.featuredCategoriesList[index];
             final bgColor = (index % 3 == 0)
                 ? AppColors.orange350.withOpacity(0.3)
                 : (index % 3 == 1)
                     ? AppColors.orange300.withOpacity(0.1)
                     : AppColors.blue400.withOpacity(0.2);
+
+            final textColor = (index % 3 == 0)
+                ? AppColors.orange500
+                : (index % 3 == 1)
+                    ? AppColors.black
+                    : AppColors.black;
             return ScrollableContainerWithWidgets(
               bgColor: bgColor,
-              items: categories.products,
-              title: categories.categoryName,
+              textColor: textColor,
+              items: featuredCategoriesList.products,
+              title: featuredCategoriesList.categoryName,
             );
           },
         ),

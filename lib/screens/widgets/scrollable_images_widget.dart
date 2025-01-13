@@ -8,7 +8,7 @@ import 'package:kwajuafrica/utils/spacers/spacers.dart';
 class ScrollableImagesWidget extends StatefulWidget {
   final String title;
 
-  final List<Category> items;
+  final List<CategoryModel> items;
 
   const ScrollableImagesWidget(
       {super.key, required this.items, required this.title});

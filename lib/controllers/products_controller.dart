@@ -3,6 +3,7 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:kwajuafrica/core/controller/base_controller.dart';
+import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/model/featured_product_category.dart';
 import 'package:kwajuafrica/repositories/product_repository.dart';
 
@@ -11,7 +12,8 @@ class ProductsController extends BaseController {
 
   final ProductRepository _productRepository = ProductRepository();
 
-  final categories = RxList<FeaturedProductCategory>();
+  final featuredCategoriesList = RxList<FeaturedProductCategory>();
+  final categoriesList = RxList<CategoryModel>();
 
   Future<void> fetchFeaturedProducts() async {
     setBusy(true);
@@ -20,12 +22,30 @@ class ProductsController extends BaseController {
           await _productRepository.fetchFeaturedProducts();
       setBusy(false);
       if (featuredCategories != null && featuredCategories.isNotEmpty) {
-        categories.assignAll(featuredCategories);
+        featuredCategoriesList.assignAll(featuredCategories);
       } else {
-        categories.clear();
+        featuredCategoriesList.clear();
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch products');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  Future<void> fetchCategories() async {
+    setBusy(true);
+    try {
+      final categories = await _productRepository.fetchCategories();
+      setBusy(false);
+      if (categories != null && categories.isNotEmpty) {
+        // Explicitly cast to List<Category> to avoid type issues
+        categoriesList.assignAll(categories);
+      } else {
+        categoriesList.clear();
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch categories');
     } finally {
       setBusy(false);
     }

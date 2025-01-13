@@ -43,7 +43,7 @@ class CategriesWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(4.0), // Border thickness
             child: CircleAvatar(
-              backgroundImage: AssetImage(bgImage),
+              backgroundImage: NetworkImage(bgImage),
               radius: 35, // Inner circle radius
             ),
           ),
