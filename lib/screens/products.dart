@@ -6,6 +6,7 @@ import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/screens/widgets/categries_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
+import 'package:kwajuafrica/screens/widgets/scrollable_container_with_widgets.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
@@ -65,6 +66,7 @@ class _ProductsState extends State<Products> {
                       onChanged: (value) {
                         setState(() {
                           _searchText = value;
+                          print(_searchText);
                         });
                       },
                     ),
@@ -122,7 +124,13 @@ class _ProductsState extends State<Products> {
                 ),
               ),
               spaceH10,
-              ScrollableContainerWidget()
+              ScrollableContainerWidget(),
+              spaceH10,
+              ScrollableContainerWithWidgets(
+                bgColor: AppColors.orange350.withOpacity(0.3),
+                items: categries,
+                title: 'Kitchen',
+              )
             ],
           ),
         ),

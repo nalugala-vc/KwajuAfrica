@@ -58,9 +58,9 @@ class _ScrollableContainerWidgetState extends State<ScrollableContainerWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Super Deals',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Inter(
+              text: 'Super Deals',
+              fontSize: 20,
             ),
             Row(
               children: [
