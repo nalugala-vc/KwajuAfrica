@@ -7,6 +7,7 @@ import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/screens/widgets/categries_widget.dart';
+import 'package:kwajuafrica/screens/widgets/products_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_with_widgets.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_images_widget.dart';
@@ -249,6 +250,20 @@ class _ProductsState extends State<Products> {
           title: 'Brands',
         ),
         spaceH20,
+        GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15,
+            childAspectRatio: 0.65,
+          ),
+          itemCount: tags.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return const ProductsWidget();
+          },
+        )
       ],
     );
   }
