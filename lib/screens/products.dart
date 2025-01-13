@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:kwajuafrica/common/app_bar.dart';
 import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/screens/widgets/categries_widget.dart';
+import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
@@ -71,9 +73,42 @@ class _ProductsState extends State<Products> {
                   const GradientIconContainer(),
                 ],
               ),
+              spaceH15,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Inter(
+                    text: 'Categories',
+                    fontSize: 20,
+                  ),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Inter(
+                          text: 'View all',
+                          fontSize: 16,
+                          textColor: AppColors.orange500,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        spaceW5,
+                        const HeroIcon(
+                          HeroIcons.chevronRight,
+                          style: HeroIconStyle.solid,
+                          color: AppColors.orange500,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              spaceH15,
               SizedBox(
-                height: 150,
-                child: ListView.builder(
+                height: 110,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return spaceW20;
+                  },
                   itemCount: categries.length,
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
@@ -86,6 +121,8 @@ class _ProductsState extends State<Products> {
                   },
                 ),
               ),
+              spaceH10,
+              ScrollableContainerWidget()
             ],
           ),
         ),

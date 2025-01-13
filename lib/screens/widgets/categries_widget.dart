@@ -20,6 +20,7 @@ class CategriesWidget extends StatelessWidget {
         Inter(
           text: categoryName,
           fontSize: 16,
+          fontWeight: FontWeight.w500,
         )
       ],
     );
