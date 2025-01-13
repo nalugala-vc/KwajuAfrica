@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kwajuafrica/common/app_bar.dart';
 import 'package:kwajuafrica/common/bottom_nav_bar.dart';
+import 'package:kwajuafrica/common/widgets/app_bar_actions.dart';
 import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/screens/widgets/categries_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_with_widgets.dart';
+import 'package:kwajuafrica/screens/widgets/tag_widget.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
@@ -125,32 +127,118 @@ class _ProductsState extends State<Products> {
                 ),
               ),
               spaceH10,
-              ScrollableContainerWidget(),
-              spaceH15,
-              ScrollableContainerWithWidgets(
-                bgColor: AppColors.orange350.withOpacity(0.3),
-                items: categries,
-                title: 'Kitchen',
-              ),
-              spaceH15,
-              ScrollableContainerWithWidgets(
-                bgColor: AppColors.orange300.withOpacity(0.1),
-                items: categries,
-                textColor: AppColors.black,
-                title: 'Shower & Bath',
-              ),
-              spaceH15,
-              ScrollableContainerWithWidgets(
-                bgColor: AppColors.blue400.withOpacity(0.2),
-                items: categries,
-                textColor: AppColors.black,
-                title: 'Mom & Baby',
-              ),
+              _homePageWithFilters()
             ],
           ),
         ),
       ),
       bottomNavigationBar: const BottomNavBar(),
+    );
+  }
+
+  Widget _homePageWithFilters() {
+    return Column(
+      children: [
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFD1015D), Color(0xFFFF6800)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Inter(
+                      text: 'Products in Kitchen',
+                      fontSize: 20,
+                      textColor: AppColors.plainWhite,
+                    ),
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          AppBarActions(
+                              bgColor: AppColors.plainWhite,
+                              borderColor: AppColors.plainWhite,
+                              icon: const Icon(
+                                Icons.arrow_left,
+                                color: AppColors.orange700,
+                              ),
+                              onTap: () {}),
+                          spaceW10,
+                          AppBarActions(
+                              bgColor: AppColors.plainWhite,
+                              borderColor: AppColors.plainWhite,
+                              icon: const Icon(
+                                Icons.arrow_right,
+                                color: AppColors.orange700,
+                              ),
+                              onTap: () {})
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                spaceH15,
+                Row(
+                  children: [
+                    TagWidget(
+                      fontWeight: FontWeight.w700,
+                      textSize: 16,
+                      bgColor: AppColors.plainWhite,
+                      borderColor: AppColors.plainWhite,
+                      onTap: () {},
+                      text: 'Dairy',
+                      textColor: AppColors.orange500,
+                    ),
+                    spaceW10,
+                    TagWidget(
+                      textSize: 16,
+                      bgColor: Colors.transparent,
+                      borderColor: AppColors.plainWhite,
+                      onTap: () {},
+                      text: 'Fresh Produce',
+                      textColor: AppColors.plainWhite,
+                    )
+                  ],
+                )
+              ],
+            ))
+      ],
+    );
+  }
+
+  Widget _homePageNoFilter() {
+    return Column(
+      children: [
+        ScrollableContainerWidget(),
+        spaceH15,
+        ScrollableContainerWithWidgets(
+          bgColor: AppColors.orange350.withOpacity(0.3),
+          items: categries,
+          title: 'Kitchen',
+        ),
+        spaceH15,
+        ScrollableContainerWithWidgets(
+          bgColor: AppColors.orange300.withOpacity(0.1),
+          items: categries,
+          textColor: AppColors.black,
+          title: 'Shower & Bath',
+        ),
+        spaceH15,
+        ScrollableContainerWithWidgets(
+          bgColor: AppColors.blue400.withOpacity(0.2),
+          items: categries,
+          textColor: AppColors.black,
+          title: 'Mom & Baby',
+        ),
+      ],
     );
   }
 }
