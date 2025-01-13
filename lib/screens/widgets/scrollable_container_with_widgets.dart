@@ -9,10 +9,12 @@ class ScrollableContainerWithWidgets extends StatefulWidget {
   final String title;
   final Color bgColor;
   final List<Category> items;
+  final Color textColor;
   const ScrollableContainerWithWidgets(
       {super.key,
       required this.bgColor,
       required this.items,
+      this.textColor = AppColors.orange500,
       required this.title});
 
   @override
@@ -81,7 +83,7 @@ class _ScrollableContainerWithWidgetsState
 
         // Horizontal scrolling text widgets
         Container(
-          padding: EdgeInsets.only(top: 15, left: 10),
+          padding: const EdgeInsets.only(top: 15, left: 10),
           width: double.infinity,
           decoration: BoxDecoration(
               color: widget.bgColor, borderRadius: BorderRadius.circular(8)),
@@ -116,7 +118,7 @@ class _ScrollableContainerWithWidgetsState
       spaceH5,
       Inter(
         text: text,
-        textColor: AppColors.orange500,
+        textColor: widget.textColor,
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),

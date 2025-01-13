@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kwajuafrica/common/app_bar.dart';
+import 'package:kwajuafrica/common/bottom_nav_bar.dart';
 import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/model/category.dart';
@@ -125,16 +126,31 @@ class _ProductsState extends State<Products> {
               ),
               spaceH10,
               ScrollableContainerWidget(),
-              spaceH10,
+              spaceH15,
               ScrollableContainerWithWidgets(
                 bgColor: AppColors.orange350.withOpacity(0.3),
                 items: categries,
                 title: 'Kitchen',
-              )
+              ),
+              spaceH15,
+              ScrollableContainerWithWidgets(
+                bgColor: AppColors.orange300.withOpacity(0.1),
+                items: categries,
+                textColor: AppColors.black,
+                title: 'Shower & Bath',
+              ),
+              spaceH15,
+              ScrollableContainerWithWidgets(
+                bgColor: AppColors.blue400.withOpacity(0.2),
+                items: categries,
+                textColor: AppColors.black,
+                title: 'Mom & Baby',
+              ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
