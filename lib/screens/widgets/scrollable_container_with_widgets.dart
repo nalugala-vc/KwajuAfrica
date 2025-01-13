@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kwajuafrica/common/widgets/app_bar_actions.dart';
-import 'package:kwajuafrica/model/category.dart';
+import 'package:kwajuafrica/model/products.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
@@ -8,7 +8,7 @@ import 'package:kwajuafrica/utils/spacers/spacers.dart';
 class ScrollableContainerWithWidgets extends StatefulWidget {
   final String title;
   final Color bgColor;
-  final List<Category> items;
+  final List<Product> items;
   final Color textColor;
   const ScrollableContainerWithWidgets(
       {super.key,
@@ -79,7 +79,7 @@ class _ScrollableContainerWithWidgetsState
             ),
           ],
         ),
-        spaceH10,
+        spaceH15,
 
         // Horizontal scrolling text widgets
         Container(
@@ -96,8 +96,8 @@ class _ScrollableContainerWithWidgetsState
             scrollDirection: Axis.horizontal,
             itemCount: widget.items.length,
             itemBuilder: (context, index) {
-              final category = widget.items[index];
-              return _containerWidgets(category.image, category.name);
+              final product = widget.items[index];
+              return _containerWidgets(product.image, product.typeName);
             },
           ),
         ),
@@ -111,7 +111,7 @@ class _ScrollableContainerWithWidgetsState
         height: 125,
         width: 116,
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(img), fit: BoxFit.cover),
+          image: DecorationImage(image: NetworkImage(img), fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(5),
         ),
       ),
