@@ -127,11 +127,13 @@ dependencies:
 ```
 
 ## 🎨 Screenshots
-[Add screenshots of your implementation here]
-![Screenshot|300x600](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc1.png)
-![Screenshot|300x600](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc4.png)
-![Screenshot|300x600](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc2.png)
-![Screenshot|300x600](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc3.png)
+![Screenshot|200x400](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc1.png)
+
+![Screenshot|200x400](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc4.png)
+
+![Screenshot|200x400](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc2.png)
+
+![Screenshot|200x400](https://github.com/nalugala-vc/KwajuAfrica/blob/main/sc3.png)
 
 ## 🤝 Assignment Requirements Met
 
