@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:kwajuafrica/common/rounded_button.dart';
+import 'package:kwajuafrica/model/brand_variant.dart';
 import 'package:kwajuafrica/screens/widgets/tag_widget.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
 
 class ProductsWidget extends StatelessWidget {
-  const ProductsWidget({super.key});
+  final BrandVariant brandVariant;
+  const ProductsWidget({super.key, required this.brandVariant});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: const BoxDecoration(
         color: AppColors.blue50,
         borderRadius: BorderRadius.only(
@@ -23,24 +26,24 @@ class ProductsWidget extends StatelessWidget {
           Container(
             height: 113,
             width: double.maxFinite,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/lotion.jpeg'),
+                image: NetworkImage(brandVariant.image),
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Inter(
-                  text: 'Fortified Fresh Vanilla Yoghurt',
+                  text: brandVariant.name,
                   fontSize: 14,
                   textAlignment: TextAlign.left,
                   fontWeight: FontWeight.w500,
@@ -52,24 +55,20 @@ class ProductsWidget extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   textColor: AppColors.grey800,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Inter(
-                      text: 'Ksh 450',
-                      fontSize: 15,
-                    ),
-                    TagWidget(
-                        horizontalPadding: 5,
-                        bgColor: Colors.transparent,
-                        borderColor: AppColors.orange700,
-                        onTap: () {},
-                        text: 'Save Ksh 60',
-                        textSize: 11,
-                        textColor: AppColors.orange700)
-                  ],
+                Inter(
+                  text: 'Ksh ${brandVariant.price}',
+                  fontSize: 15,
                 ),
                 spaceH10,
+                TagWidget(
+                    horizontalPadding: 5,
+                    bgColor: Colors.transparent,
+                    borderColor: AppColors.orange700,
+                    onTap: () {},
+                    text: 'Save Ksh ${brandVariant.savings}',
+                    textSize: 11,
+                    textColor: AppColors.orange700),
+                spaceH20,
                 RoundedButton(
                   label: 'Choose options',
                   textColor: AppColors.plainWhite,

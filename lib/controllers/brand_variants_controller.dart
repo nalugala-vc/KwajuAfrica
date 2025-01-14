@@ -11,7 +11,7 @@ class BrandVariantsController extends BaseController {
 
   final ProductRepository _productRepository = ProductRepository();
 
-  final brandVariantsList = RxList<BrandVariant>();
+  final brandVariantsList = RxList<BrandVariant?>();
 
   Future<void> fetchBrandVariants({
     required String categoryId,

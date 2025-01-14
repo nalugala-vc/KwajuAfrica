@@ -9,6 +9,7 @@ import 'package:kwajuafrica/common/loader.dart';
 import 'package:kwajuafrica/common/widgets/app_bar_actions.dart';
 import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
+import 'package:kwajuafrica/controllers/brand_variants_controller.dart';
 import 'package:kwajuafrica/controllers/products_controller.dart';
 import 'package:kwajuafrica/model/brand.dart';
 import 'package:kwajuafrica/model/category.dart';
@@ -36,6 +37,7 @@ class _ProductsState extends State<Products> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final productController = Get.find<ProductsController>();
+  final brandVariantController = Get.find<BrandVariantsController>();
   String _searchText = '';
 
   CategoryModel? _selectedCategory;
@@ -47,6 +49,7 @@ class _ProductsState extends State<Products> {
     setState(() {
       _selectedCategory = category;
       _selectFirstSubCategory(category);
+      _fetchBrandVariants();
     });
   }
 
@@ -54,6 +57,7 @@ class _ProductsState extends State<Products> {
     setState(() {
       _selectedSubCategory = subCategory;
       _selectFirstType(subCategory);
+      _fetchBrandVariants();
     });
   }
 
@@ -88,12 +92,28 @@ class _ProductsState extends State<Products> {
     setState(() {
       _selectedType = type;
       _selectFirstBrand(type);
+      _fetchBrandVariants();
     });
+  }
+
+  void _fetchBrandVariants() {
+    if (_selectedCategory != null &&
+        _selectedSubCategory != null &&
+        _selectedType != null &&
+        _selectedBrand != null) {
+      brandVariantController.fetchBrandVariants(
+        categoryId: _selectedCategory!.id,
+        subCategoryId: _selectedSubCategory!.subCategoryId,
+        typeId: _selectedType!.typeId,
+        brandId: _selectedBrand!.brandId,
+      );
+    }
   }
 
   void _onBrandTapped(Brand brand) {
     setState(() {
       _selectedBrand = brand;
+      _fetchBrandVariants();
     });
   }
 
@@ -380,20 +400,54 @@ class _ProductsState extends State<Products> {
             },
           ),
         spaceH20,
-        GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15,
-            childAspectRatio: 0.65,
-          ),
-          itemCount: tags.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return const ProductsWidget();
-          },
-        )
+        Obx(() {
+          if (brandVariantController.isLoading.value) {
+            return const Center(child: Loader());
+          }
+
+          final variants = brandVariantController.brandVariantsList;
+          if (variants == null || variants.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.inventory_2_outlined,
+                    size: 48,
+                    color: AppColors.grey400,
+                  ),
+                  spaceH10,
+                  Inter(
+                    text: 'No products found for this selection',
+                    fontSize: 16,
+                    textColor: AppColors.grey400,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Display products grid
+          return SingleChildScrollView(
+            child: Wrap(
+              spacing: 15, // horizontal spacing
+              runSpacing: 15, // vertical spacing
+              children: List.generate(
+                variants.length,
+                (index) {
+                  final variant = variants[index];
+                  return SizedBox(
+                    width: (MediaQuery.of(context).size.width - 55) /
+                        2, // account for padding and spacing
+                    child: ProductsWidget(
+                      brandVariant: variant!,
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        }),
       ],
     );
   }

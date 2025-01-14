@@ -101,6 +101,7 @@ class ProductRepository {
         Uri.parse('${AppConfigs.appBaseUrl}${Endpoints.brandVariants}');
     final headers = await AppConfigs.authorizedHeaders();
 
+    // Add the body parameters
     final body = jsonEncode({
       "category_id": categoryId,
       "sub_category_id": subCategoryId,
@@ -109,26 +110,26 @@ class ProductRepository {
     });
 
     try {
-      final response = await http
-          .post(
-            url,
-            headers: headers,
-            body: body,
-          )
+      // Create a custom request to support GET with body
+      final request = http.Request('GET', url);
+      request.headers.addAll(headers);
+      request.body = body;
+
+      final streamedResponse = await request
+          .send()
           .timeout(const Duration(seconds: AppConfigs.timeoutDuration));
+
+      final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-
         final List<dynamic> brandVariantsJson = responseData['data'];
-
         List<BrandVariant> brandVariants = brandVariantsJson
             .map((json) => BrandVariant.fromJson(json))
             .toList();
-
         return brandVariants;
       } else {
-        print('response ${response.body}');
+        print('Response: ${response.body}');
         Get.snackbar('Error', 'Something went wrong');
         return null;
       }
