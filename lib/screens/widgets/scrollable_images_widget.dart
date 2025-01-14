@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kwajuafrica/common/widgets/app_bar_actions.dart';
-import 'package:kwajuafrica/model/category.dart';
+import 'package:kwajuafrica/model/brand.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
 import 'package:kwajuafrica/utils/spacers/spacers.dart';
@@ -8,7 +8,7 @@ import 'package:kwajuafrica/utils/spacers/spacers.dart';
 class ScrollableImagesWidget extends StatefulWidget {
   final String title;
 
-  final List<CategoryModel> items;
+  final List<Brand> items;
 
   const ScrollableImagesWidget(
       {super.key, required this.items, required this.title});
@@ -44,7 +44,6 @@ class _ScrollableImagesWidgetState extends State<ScrollableImagesWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Row with title and navigation buttons
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -74,8 +73,6 @@ class _ScrollableImagesWidgetState extends State<ScrollableImagesWidget> {
           ],
         ),
         spaceH10,
-
-        // Horizontal scrolling text widgets
         SizedBox(
           width: double.infinity,
           height: 70,
@@ -103,10 +100,10 @@ class _ScrollableImagesWidgetState extends State<ScrollableImagesWidget> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(4.0), // Border thickness
+                  padding: const EdgeInsets.all(4.0),
                   child: CircleAvatar(
                     backgroundImage: AssetImage(item.image),
-                    radius: 35, // Inner circle radius
+                    radius: 35,
                   ),
                 ),
               );

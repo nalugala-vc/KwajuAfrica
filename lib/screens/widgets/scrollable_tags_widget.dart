@@ -11,8 +11,11 @@ class ScrollableTagsWidget extends StatefulWidget {
 
   final List<SubCategory> items;
 
-  const ScrollableTagsWidget(
-      {super.key, required this.items, required this.title});
+  const ScrollableTagsWidget({
+    super.key,
+    required this.items,
+    required this.title,
+  });
 
   @override
   // ignore: library_private_types_in_public_api

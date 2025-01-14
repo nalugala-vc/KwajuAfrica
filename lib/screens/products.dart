@@ -11,6 +11,8 @@ import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/controllers/products_controller.dart';
 import 'package:kwajuafrica/model/category.dart';
+import 'package:kwajuafrica/model/subcategory.dart';
+import 'package:kwajuafrica/model/type.dart';
 import 'package:kwajuafrica/screens/widgets/categries_widget.dart';
 import 'package:kwajuafrica/screens/widgets/products_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
@@ -31,11 +33,13 @@ class Products extends StatefulWidget {
 
 class _ProductsState extends State<Products> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final productController = Get.find<ProductsController>();
   String _searchText = '';
-  String selectedCategoryName = 'Kitchen';
 
   CategoryModel? _selectedCategory;
+  SubCategory? _selectedSubCategory;
+  Type? _selectedType;
 
   void _onCategoryTapped(CategoryModel category) {
     setState(() {
@@ -43,22 +47,36 @@ class _ProductsState extends State<Products> {
     });
   }
 
-  final ScrollController _scrollController = ScrollController();
+  void _onSubCategoryTapped(SubCategory subCategory) {
+    setState(() {
+      _selectedSubCategory = subCategory;
+    });
+  }
+
+  void _onTypeTapped(Type type) {
+    setState(() {
+      _selectedType = type;
+    });
+  }
 
   void _scrollLeft() {
-    _scrollController.animateTo(
-      _scrollController.offset - 200, // Adjust the scroll distance as needed
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    if (_scrollController.hasClients && _scrollController.offset > 0) {
+      _scrollController.animateTo(
+        _scrollController.offset - 150,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _scrollRight() {
-    _scrollController.animateTo(
-      _scrollController.offset + 200, // Adjust the scroll distance as needed
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.offset + 150,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   List<String> tags = ['All', 'Yoghurt', 'Ghee', 'Milk', 'Icecream'];
@@ -77,13 +95,13 @@ class _ProductsState extends State<Products> {
   }
 
   Future<void> _refresh() async {
-    // Fetch data again when pulled to refresh
     await _loadData();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -198,11 +216,96 @@ class _ProductsState extends State<Products> {
   Widget _homePageWithFilters() {
     return Column(
       children: [
-        ScrollableTagsWidget(
-          title: _selectedCategory!.name,
-          items: _selectedCategory!.subcategories,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFD1015D), Color(0xFFFF6800)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: Inter(
+                      text: 'Products in ${_selectedCategory!.name}',
+                      fontSize: 20,
+                      textAlignment: TextAlign.left,
+                      textColor: AppColors.plainWhite,
+                    ),
+                  ),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        AppBarActions(
+                          bgColor: AppColors.plainWhite,
+                          borderColor: AppColors.plainWhite,
+                          icon: const Icon(
+                            Icons.arrow_left,
+                            color: AppColors.orange700,
+                          ),
+                          onTap: () {
+                            _scrollLeft();
+                          },
+                        ),
+                        spaceW10,
+                        AppBarActions(
+                          bgColor: AppColors.plainWhite,
+                          borderColor: AppColors.plainWhite,
+                          icon: const Icon(
+                            Icons.arrow_right,
+                            color: AppColors.orange700,
+                          ),
+                          onTap: () {
+                            _scrollRight();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              spaceH15,
+              // Displaying subcategories
+              SizedBox(
+                height: 35,
+                child: ListView.separated(
+                  controller: _scrollController,
+                  separatorBuilder: (context, index) {
+                    return spaceW10;
+                  },
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _selectedCategory!.subcategories.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final subcategory = _selectedCategory!.subcategories[index];
+                    final isActive = subcategory == _selectedSubCategory;
+                    return TagWidget(
+                      fontWeight: FontWeight.w500,
+                      textSize: 16,
+                      bgColor:
+                          isActive ? AppColors.plainWhite : Colors.transparent,
+                      borderColor: AppColors.plainWhite,
+                      onTap: () {
+                        _onSubCategoryTapped(subcategory);
+                      },
+                      text: subcategory.name,
+                      textColor:
+                          isActive ? AppColors.orange500 : AppColors.plainWhite,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-
         spaceH15,
         SizedBox(
           height: 30,
@@ -210,25 +313,29 @@ class _ProductsState extends State<Products> {
             separatorBuilder: (context, index) {
               return spaceW15;
             },
-            itemCount: tags.length,
+            itemCount: _selectedSubCategory!.types.length,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
+              final type = _selectedSubCategory!.types[index];
+              final isActive = type == _selectedType;
               return TagWidget(
-                bgColor: Colors.transparent,
-                borderColor: AppColors.grey400,
-                onTap: () {},
-                text: tags[index],
-                textColor: AppColors.grey400,
+                bgColor: isActive ? AppColors.orange500 : Colors.transparent,
+                borderColor: isActive ? AppColors.orange500 : AppColors.grey400,
+                onTap: () {
+                  _onTypeTapped(type);
+                },
+                text: type.name,
+                textColor: isActive ? AppColors.plainWhite : AppColors.grey400,
               );
             },
           ),
         ),
         spaceH15,
-        // ScrollableImagesWidget(
-        //   items: categries,
-        //   title: 'Brands',
-        // ),
+        ScrollableImagesWidget(
+          items: _selectedType!.brands,
+          title: 'Brands',
+        ),
         spaceH20,
         GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
