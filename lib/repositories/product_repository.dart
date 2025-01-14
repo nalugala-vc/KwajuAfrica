@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kwajuafrica/api/configs.dart';
 import 'package:kwajuafrica/api/endpoints.dart';
+import 'package:kwajuafrica/model/brand_variant.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/model/featured_product_category.dart';
 import 'package:http/http.dart' as http;
@@ -90,7 +91,7 @@ class ProductRepository {
     }
   }
 
-  Future<List<CategoryModel>?> fetchBrandVariants({
+  Future<List<BrandVariant>?> fetchBrandVariants({
     required String categoryId,
     required String subCategoryId,
     required String typeId,
@@ -119,12 +120,13 @@ class ProductRepository {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-        final List<dynamic> categoriesJson = responseData['data'];
+        final List<dynamic> brandVariantsJson = responseData['data'];
 
-        List<CategoryModel> categories =
-            categoriesJson.map((json) => CategoryModel.fromJson(json)).toList();
+        List<BrandVariant> brandVariants = brandVariantsJson
+            .map((json) => BrandVariant.fromJson(json))
+            .toList();
 
-        return categories;
+        return brandVariants;
       } else {
         print('response ${response.body}');
         Get.snackbar('Error', 'Something went wrong');
