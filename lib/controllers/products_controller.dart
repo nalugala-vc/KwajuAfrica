@@ -20,12 +20,13 @@ class ProductsController extends BaseController {
     try {
       final featuredCategories =
           await _productRepository.fetchFeaturedProducts();
-      setBusy(false);
+
       if (featuredCategories != null && featuredCategories.isNotEmpty) {
         featuredCategoriesList.assignAll(featuredCategories);
       } else {
         featuredCategoriesList.clear();
       }
+      setBusy(false);
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch products');
     } finally {
@@ -37,13 +38,14 @@ class ProductsController extends BaseController {
     setBusy(true);
     try {
       final categories = await _productRepository.fetchCategories();
-      setBusy(false);
+
       if (categories != null && categories.isNotEmpty) {
         // Explicitly cast to List<Category> to avoid type issues
         categoriesList.assignAll(categories);
       } else {
         categoriesList.clear();
       }
+      setBusy(false);
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch categories');
     } finally {

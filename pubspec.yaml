@@ -38,7 +38,7 @@ dependencies:
   get: ^4.6.6
   heroicons: ^0.11.0
   google_fonts: ^6.2.1
-  connectivity_plus: ^6.1.0
+ 
 
 dev_dependencies:
   flutter_test:

@@ -26,12 +26,13 @@ class BrandVariantsController extends BaseController {
           categoryId: categoryId,
           subCategoryId: subCategoryId,
           typeId: typeId);
-      setBusy(false);
+
       if (brandVariants != null && brandVariants.isNotEmpty) {
         brandVariantsList.assignAll(brandVariants);
       } else {
         brandVariantsList.clear();
       }
+      setBusy(false);
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch brand variants');
     } finally {
