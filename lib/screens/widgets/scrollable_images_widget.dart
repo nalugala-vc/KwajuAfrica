@@ -9,9 +9,15 @@ class ScrollableImagesWidget extends StatefulWidget {
   final String title;
 
   final List<Brand> items;
-
-  const ScrollableImagesWidget(
-      {super.key, required this.items, required this.title});
+  final Brand? selectedBrand; // Add this
+  final Function(Brand) onBrandSelected; // Add this
+  const ScrollableImagesWidget({
+    super.key,
+    required this.items,
+    required this.title,
+    required this.onBrandSelected, // Add this
+    this.selectedBrand, // Add this
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -85,25 +91,28 @@ class _ScrollableImagesWidgetState extends State<ScrollableImagesWidget> {
             itemCount: widget.items.length,
             itemBuilder: (context, index) {
               final item = widget.items[index];
-              return Container(
-                width: 74,
-                height: 74,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.grey300,
-                      AppColors.grey300
-                    ], // Gradient colors
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              final isSelected = widget.selectedBrand == item;
+              return GestureDetector(
+                onTap: () => widget.onBrandSelected(item),
+                child: Container(
+                  width: 74,
+                  height: 74,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: isSelected // Add highlight for selected brand
+                          ? [AppColors.orange500, AppColors.orange700]
+                          : [AppColors.grey300, AppColors.grey300],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(item.image),
-                    radius: 35,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(item.image),
+                      radius: 35,
+                    ),
                   ),
                 ),
               );

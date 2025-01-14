@@ -10,6 +10,7 @@ import 'package:kwajuafrica/common/widgets/app_bar_actions.dart';
 import 'package:kwajuafrica/common/widgets/gradient_icon.dart';
 import 'package:kwajuafrica/common/widgets/search_widget.dart';
 import 'package:kwajuafrica/controllers/products_controller.dart';
+import 'package:kwajuafrica/model/brand.dart';
 import 'package:kwajuafrica/model/category.dart';
 import 'package:kwajuafrica/model/subcategory.dart';
 import 'package:kwajuafrica/model/type.dart';
@@ -40,22 +41,59 @@ class _ProductsState extends State<Products> {
   CategoryModel? _selectedCategory;
   SubCategory? _selectedSubCategory;
   Type? _selectedType;
+  Brand? _selectedBrand;
 
   void _onCategoryTapped(CategoryModel category) {
     setState(() {
       _selectedCategory = category;
+      _selectFirstSubCategory(category);
     });
   }
 
   void _onSubCategoryTapped(SubCategory subCategory) {
     setState(() {
       _selectedSubCategory = subCategory;
+      _selectFirstType(subCategory);
     });
+  }
+
+  void _selectFirstSubCategory(CategoryModel category) {
+    if (category.subcategories.isNotEmpty) {
+      _selectedSubCategory = category.subcategories.first;
+      _selectFirstType(_selectedSubCategory!);
+    } else {
+      _selectedSubCategory = null;
+      _selectedType = null;
+    }
+  }
+
+  void _selectFirstType(SubCategory subCategory) {
+    if (subCategory.types.isNotEmpty) {
+      _selectedType = subCategory.types.first;
+      _selectFirstBrand(_selectedType!);
+    } else {
+      _selectedType = null;
+    }
+  }
+
+  void _selectFirstBrand(Type type) {
+    if (type.brands.isNotEmpty) {
+      _selectedBrand = type.brands.first;
+    } else {
+      _selectedBrand = null;
+    }
   }
 
   void _onTypeTapped(Type type) {
     setState(() {
       _selectedType = type;
+      _selectFirstBrand(type);
+    });
+  }
+
+  void _onBrandTapped(Brand brand) {
+    setState(() {
+      _selectedBrand = brand;
     });
   }
 
@@ -332,10 +370,15 @@ class _ProductsState extends State<Products> {
           ),
         ),
         spaceH15,
-        ScrollableImagesWidget(
-          items: _selectedType!.brands,
-          title: 'Brands',
-        ),
+        if (_selectedType?.brands.isNotEmpty ?? false)
+          ScrollableImagesWidget(
+            items: _selectedType!.brands,
+            title: 'Brands',
+            selectedBrand: _selectedBrand,
+            onBrandSelected: (brand) {
+              _onBrandTapped(brand);
+            },
+          ),
         spaceH20,
         GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

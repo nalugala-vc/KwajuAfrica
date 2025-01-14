@@ -89,4 +89,56 @@ class ProductRepository {
       return null;
     }
   }
+
+  Future<List<CategoryModel>?> fetchBrandVariants({
+    required String categoryId,
+    required String subCategoryId,
+    required String typeId,
+    required String brandId,
+  }) async {
+    final Uri url =
+        Uri.parse('${AppConfigs.appBaseUrl}${Endpoints.brandVariants}');
+    final headers = await AppConfigs.authorizedHeaders();
+
+    final body = jsonEncode({
+      "category_id": categoryId,
+      "sub_category_id": subCategoryId,
+      "type_id": typeId,
+      "brand_id": brandId,
+    });
+
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: headers,
+            body: body,
+          )
+          .timeout(const Duration(seconds: AppConfigs.timeoutDuration));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        final List<dynamic> categoriesJson = responseData['data'];
+
+        List<CategoryModel> categories =
+            categoriesJson.map((json) => CategoryModel.fromJson(json)).toList();
+
+        return categories;
+      } else {
+        print('response ${response.body}');
+        Get.snackbar('Error', 'Something went wrong');
+        return null;
+      }
+    } on SocketException {
+      Get.snackbar('Error', 'No Internet connection');
+      return null;
+    } on TimeoutException {
+      Get.snackbar('Error', 'Request timed out');
+      return null;
+    } catch (e) {
+      print('Error: Something went wrong $e');
+      return null;
+    }
+  }
 }
