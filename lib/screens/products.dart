@@ -20,7 +20,6 @@ import 'package:kwajuafrica/screens/widgets/products_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_widget.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_container_with_widgets.dart';
 import 'package:kwajuafrica/screens/widgets/scrollable_images_widget.dart';
-import 'package:kwajuafrica/screens/widgets/scrollable_tags_widget.dart';
 import 'package:kwajuafrica/screens/widgets/tag_widget.dart';
 import 'package:kwajuafrica/utils/colors/app_colors.dart';
 import 'package:kwajuafrica/utils/fonts/inter.dart';
@@ -172,98 +171,120 @@ class _ProductsState extends State<Products> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Obx(
-            () => productController.isLoading.value
-                ? Loader()
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            () {
+              if (productController.isLoading.value) {
+                return const Loader();
+              }
+
+              if (productController.categoriesList.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Inter(
-                        text: 'Hello Anna! 👋',
-                        fontSize: 20,
+                      const Icon(
+                        Icons.category_outlined,
+                        size: 48,
+                        color: AppColors.grey400,
                       ),
+                      spaceH10,
                       Inter(
-                        text: 'What are you buying from us today?',
+                        text: 'No products available',
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
                         textColor: AppColors.grey400,
                       ),
-                      spaceH20,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: SearchWidget(
-                              hintText: 'Search',
-                              searchController: _searchController,
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchText = value;
-                                });
-                              },
-                            ),
-                          ),
-                          spaceW10,
-                          const GradientIconContainer(),
-                        ],
-                      ),
-                      spaceH15,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Inter(
-                            text: 'Categories',
-                            fontSize: 20,
-                          ),
-                          SizedBox(
-                            child: Row(
-                              children: [
-                                Inter(
-                                  text: 'View all',
-                                  fontSize: 16,
-                                  textColor: AppColors.orange500,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                spaceW5,
-                                const HeroIcon(
-                                  HeroIcons.chevronRight,
-                                  style: HeroIconStyle.solid,
-                                  color: AppColors.orange500,
-                                  size: 20,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      spaceH15,
-                      SizedBox(
-                          height: 110,
-                          child: ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return spaceW20;
-                            },
-                            itemCount: productController.categoriesList.length,
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              final category =
-                                  productController.categoriesList[index];
-                              return CategriesWidget(
-                                bgImage: category.image,
-                                categoryName: category.name,
-                                isActive: category == _selectedCategory,
-                                onPressed: () {
-                                  _onCategoryTapped(category);
-                                },
-                              );
-                            },
-                          )),
-                      spaceH10,
-                      _selectedCategory != null
-                          ? _homePageWithFilters()
-                          : _homePageNoFilter()
                     ],
                   ),
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Inter(
+                    text: 'Hello Anna! 👋',
+                    fontSize: 20,
+                  ),
+                  Inter(
+                    text: 'What are you buying from us today?',
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    textColor: AppColors.grey400,
+                  ),
+                  spaceH20,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: SearchWidget(
+                          hintText: 'Search',
+                          searchController: _searchController,
+                          onChanged: (value) {
+                            setState(() {
+                              _searchText = value;
+                            });
+                          },
+                        ),
+                      ),
+                      spaceW10,
+                      const GradientIconContainer(),
+                    ],
+                  ),
+                  spaceH15,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Inter(
+                        text: 'Categories',
+                        fontSize: 20,
+                      ),
+                      SizedBox(
+                        child: Row(
+                          children: [
+                            Inter(
+                              text: 'View all',
+                              fontSize: 16,
+                              textColor: AppColors.orange500,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            spaceW5,
+                            const HeroIcon(
+                              HeroIcons.chevronRight,
+                              style: HeroIconStyle.solid,
+                              color: AppColors.orange500,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  spaceH15,
+                  SizedBox(
+                    height: 110,
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => spaceW20,
+                      itemCount: productController.categoriesList.length,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        final category =
+                            productController.categoriesList[index];
+                        return CategriesWidget(
+                          bgImage: category.image,
+                          categoryName: category.name,
+                          isActive: category == _selectedCategory,
+                          onPressed: () => _onCategoryTapped(category),
+                        );
+                      },
+                    ),
+                  ),
+                  spaceH10,
+                  _selectedCategory != null
+                      ? _homePageWithFilters()
+                      : _homePageNoFilter()
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -273,6 +294,7 @@ class _ProductsState extends State<Products> {
 
   Widget _homePageWithFilters() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -430,15 +452,17 @@ class _ProductsState extends State<Products> {
           // Display products grid
           return SingleChildScrollView(
             child: Wrap(
-              spacing: 15, // horizontal spacing
-              runSpacing: 15, // vertical spacing
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              spacing: 15,
+              runSpacing: 15,
               children: List.generate(
                 variants.length,
                 (index) {
                   final variant = variants[index];
                   return SizedBox(
-                    width: (MediaQuery.of(context).size.width - 55) /
-                        2, // account for padding and spacing
+                    width: (MediaQuery.of(context).size.width - 55) / 2,
                     child: ProductsWidget(
                       brandVariant: variant!,
                     ),
